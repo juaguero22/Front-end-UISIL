@@ -1,0 +1,12 @@
+import axios from "axios";
+console.log("URL DE API:", import.meta.env.VITE_API_URL);
+
+export const http = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+
+  timeout: 15000,
+
+  headers: {
+    Accept: "application/json",
+  },
+});
