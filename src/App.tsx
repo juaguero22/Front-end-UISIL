@@ -1,6 +1,6 @@
 import "./App.css";
 import { HashRouter, Navigate, Route, Routes } from "react-router";
-import { InicioSesionPage } from "./Features/Auth/Page/Iniciosesion";
+import { InicioSesionPage } from "./Features/Auth/Pages/Iniciosesion";
 import { useInicioSesion } from "./Features/Auth/hooks/useInicioSesion";
 import { DashboardPage } from "./Features/Dashboard/Pages/Dashboard";
 

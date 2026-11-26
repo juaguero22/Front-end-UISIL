@@ -1,4 +1,3 @@
-
 /* Grid divide la pantalla en dos áreas: menú de 260px y contenido que usa el espacio restante. */
 .dashboard-layout {
   display: grid;

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { UsuariosAPI } from "../Services/usuariosAPI";
-import type { NuevoUsuario, Usuario } from "../Services/usuariosAPI";
+import { UsuariosAPI } from "../Services/UsuariosAPI";
+import type { NuevoUsuario, Usuario } from "../Services/UsuariosAPI";
 
+// Usa el mensaje del servidor cuando está disponible.
 function ObtenerMensaje(error: unknown, mensaje: string) {
   if (axios.isAxiosError(error)) {
-    if (!error.response) return "No se pudo contactar con el servidor";
-
+    if (!error.response) return "No se pudo contactar con el servidor.";
     return error.response.data?.mensaje || mensaje;
   }
 
@@ -19,19 +19,20 @@ export function useUsuarios() {
   const [errorLista, setErrorLista] = useState("");
   const [consulta, setConsulta] = useState(0);
   const [guardando, setGuardando] = useState(false);
-  const [errorGuandando, setErrorGuardando] = useState("");
+  const [errorGuardado, setErrorGuardado] = useState("");
 
+  // Carga la lista al entrar y cada vez que cambia el número de consulta.
   useEffect(() => {
     const controlador = new AbortController();
 
-    async function cargarUsuarios() {
+    async function CargarUsuarios() {
       try {
         const datos = await UsuariosAPI.Listar(controlador.signal);
         if (!controlador.signal.aborted) setUsuarios(datos);
       } catch (error) {
         if (!controlador.signal.aborted) {
           setErrorLista(
-            ObtenerMensaje(error, "No se pudo consultar los usuarios"),
+            ObtenerMensaje(error, "No se pudo consultar los usuarios."),
           );
         }
       } finally {
@@ -39,8 +40,8 @@ export function useUsuarios() {
       }
     }
 
-    void cargarUsuarios();
-
+    void CargarUsuarios();
+    // Cancela la consulta anterior al recargar o salir de la pantalla.
     return () => controlador.abort();
   }, [consulta]);
 
@@ -53,15 +54,15 @@ export function useUsuarios() {
   async function Crear(usuario: NuevoUsuario) {
     if (guardando) return false;
 
-    setErrorGuardando("");
+    setErrorGuardado("");
     setGuardando(true);
-
     try {
       await UsuariosAPI.Crear(usuario);
+      // Vuelve a pedir la lista para incluir el registro recién creado.
       Recargar();
       return true;
     } catch (error) {
-      setErrorGuardando(ObtenerMensaje(error, "No se pudo crear el usuario"));
+      setErrorGuardado(ObtenerMensaje(error, "No se pudo crear el usuario."));
       return false;
     } finally {
       setGuardando(false);
@@ -74,8 +75,8 @@ export function useUsuarios() {
     errorLista,
     Recargar,
     guardando,
-    errorGuandando,
-    setErrorGuardando,
+    errorGuardado,
+    setErrorGuardado,
     Crear,
   };
 }
